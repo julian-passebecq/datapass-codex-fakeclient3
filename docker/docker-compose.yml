@@ -1,0 +1,19 @@
+services:
+  vm:
+    image: python:3.11-slim
+    working_dir: /app
+    command: ["python", "runner/run_pipeline.py", "--runs", "/runs"]
+    volumes:
+      - ..:/app:ro
+      - pilot-data:/runs
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    depends_on:
+      - storage
+  storage:
+    image: alpine:3.20
+    command: ["sh", "-c", "mkdir -p /data && sleep infinity"]
+    volumes:
+      - pilot-data:/data
+volumes:
+  pilot-data:
