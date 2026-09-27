@@ -1,0 +1,83 @@
+{
+  "name": "blade_study_pipeline",
+  "properties": {
+    "annotations": [
+      "synthetic",
+      "local-simulator-only",
+      "never-deployed"
+    ],
+    "parameters": {
+      "siteCsv": {
+        "type": "String",
+        "defaultValue": "fixtures/site_a_wind.csv"
+      }
+    },
+    "variables": {
+      "artifact_manifest": {
+        "type": "String"
+      }
+    },
+    "activities": [
+      {
+        "name": "copy_raw",
+        "type": "Copy",
+        "dependsOn": [],
+        "typeProperties": {
+          "source": {
+            "type": "DelimitedTextSource"
+          },
+          "sink": {
+            "type": "DelimitedTextSink"
+          }
+        }
+      },
+      {
+        "name": "study_job",
+        "type": "DatabricksNotebook",
+        "dependsOn": [
+          {
+            "activity": "copy_raw",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "notebookPath": "jobs/study_notebook.py"
+        }
+      },
+      {
+        "name": "publish",
+        "type": "AzureFunctionActivity",
+        "dependsOn": [
+          {
+            "activity": "study_job",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "functionName": "publish",
+          "method": "POST"
+        }
+      },
+      {
+        "name": "write_manifest",
+        "type": "SetVariable",
+        "dependsOn": [
+          {
+            "activity": "publish",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ],
+        "typeProperties": {
+          "variableName": "artifact_manifest",
+          "value": "manifest.json"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "version": "1.0",
+  "synthetic": true,
+  "annual_energy_kwh_estimate": 1234.0,
+  "limitations": "Arbitrary standalone handler fixture, not a measured or calculated site result."
+}

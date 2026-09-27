@@ -1,0 +1,14 @@
+resources:
+  jobs:
+    study:
+      name: synthetic-blade-study
+      tasks:
+        - task_key: study
+          existing_cluster_id: ${var.cluster_id}
+          notebook_task:
+            notebook_path: ../../jobs/study_notebook.py
+            base_parameters:
+              input_path: ${var.input_path}
+              output_path: ${var.output_path}
+# The local runner calls the exported notebook's run() function. Cloud widget/runtime
+# wiring, storage staging and provider validation are intentionally not implemented.

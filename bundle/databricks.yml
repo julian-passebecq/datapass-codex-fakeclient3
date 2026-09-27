@@ -1,0 +1,16 @@
+bundle:
+  name: synthetic-blade-study
+include:
+  - resources/*.yml
+sync:
+  paths:
+    - ../jobs
+    - ../runner
+variables:
+  cluster_id:
+    description: Required real cluster ID before any deployment; none is supplied in this pilot
+  input_path:
+    description: Required staged input path; no workspace or cloud storage is configured
+  output_path:
+    description: Required output path
+# Declarative orientation only. No target, host, credential or deployment is configured.
